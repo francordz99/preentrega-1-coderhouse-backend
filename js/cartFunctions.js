@@ -6,8 +6,6 @@ function generateUniqueCartId() {
     return uniqueId;
 }
 
-// FUNCION PARA AGREGAR AL CARRITO IRIA ACA
-
 function addCartToStorage(cart) {
     try {
         const filePath = path.join(__dirname, 'carts.json');
@@ -42,11 +40,35 @@ function getCartById(cartId) {
     }
 }
 
+function addProductToCart(cartId, productId) {
+    try {
+        const filePath = path.join(__dirname, 'carts.json');
+        const carts = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+
+        const cart = carts.find((cart) => cart.id === cartId);
+
+        if (!cart) {
+            throw new Error('Carrito no encontrado');
+        }
+
+        const existingProduct = cart.products.find((product) => product.product === productId);
+
+        if (existingProduct) {
+            existingProduct.quantity += 1;
+        } else {
+            cart.products.push({ product: productId, quantity: 1 });
+        }
+
+        fs.writeFileSync(filePath, JSON.stringify(carts, null, 2), 'utf-8');
+    } catch (error) {
+        console.error("Error al agregar el producto al carrito:", error);
+        throw error;
+    }
+}
+
 module.exports = {
     generateUniqueCartId,
     addCartToStorage,
     getCartById,
     addProductToCart
 };
-
-console.log(addProductToCart(1694394290308, 12));

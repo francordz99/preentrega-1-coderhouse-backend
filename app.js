@@ -153,7 +153,18 @@ cartRouter.get('/:cid', (req, res) => {
     }
 });
 
-// CARTROUTER.POST PARA AGREGAR PRODUCTOS AL CART IRIA ACA
+cartRouter.post('/:cid/product/:pid', (req, res) => {
+    try {
+        const { cid, pid } = req.params;
+
+        cartFunctions.addProductToCart(cid, pid);
+
+        res.json({ message: 'Producto agregado al carrito con éxito.' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al agregar el producto al carrito.' });
+    }
+});
 
 // Arrancar el server
 app.listen(port, () => {
